@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 type Step =
   | { kind: "system"; text: string }
@@ -122,12 +123,12 @@ export default function Home() {
       <header style={{ marginBottom: 28 }}>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
           <h1 style={{ fontSize: 22, margin: 0 }}>Ken</h1>
-          <a href="/connectors" style={{ fontSize: 13, color: "#0a7a6d" }}>
+          <Link href="/connectors" style={{ fontSize: 13, color: "#0a7a6d" }}>
             View connectors →
-          </a>
+          </Link>
         </div>
         <p style={{ color: "#667", fontSize: 13.5, marginTop: 6 }}>
-          Scripted front-end preview of the agent's renewal-negotiation flow — "The Ken x Pine Labs" Round 3. No live
+          Scripted front-end preview of the agent&apos;s renewal-negotiation flow — &quot;The Ken x Pine Labs&quot; Round 3. No live
           connectors are called here; Gmail, Pine Labs, insurer and Delhivery calls shown below are illustrative,
           matching what will be wired natively on the Pine Labs platform.
         </p>

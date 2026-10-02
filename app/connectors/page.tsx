@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const TOOLS = [
   { name: "create_shipment", kind: "Delhivery mock", desc: "Courier the renewed policy document to the family's address." },
   { name: "track_shipment", kind: "Delhivery mock", desc: "Track that shipment by waybill." },
@@ -11,7 +13,7 @@ const TOOLS = [
 export default function Connectors() {
   return (
     <main style={{ maxWidth: 720, margin: "60px auto", padding: "0 24px", color: "#0a2540" }}>
-      <a href="/" style={{ color: "#0a7a6d", fontSize: 14 }}>&larr; Back to demo</a>
+      <Link href="/" style={{ color: "#0a7a6d", fontSize: 14 }}>&larr; Back to demo</Link>
       <h1 style={{ fontSize: 24 }}>Ken — mock connector server</h1>
       <p style={{ color: "#555" }}>
         MCP endpoint: <code>/api/mcp</code> — register this as a Custom / MCP connector on the Pine Labs AgenticOrg platform.
