@@ -62,7 +62,7 @@ const handler = createMcpHandler(
     );
   },
   {},
-  { basePath: "/api" }
+  { streamableHttpEndpoint: "/api/gnani-mcp", sseEndpoint: "/api/gnani-mcp/sse", sseMessageEndpoint: "/api/gnani-mcp/message" }
 );
 
 export { handler as GET, handler as POST, handler as DELETE };
