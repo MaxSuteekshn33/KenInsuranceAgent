@@ -45,58 +45,11 @@ const handler = createMcpHandler(
       }
     );
 
-    server.tool(
-      "track_shipment",
-      "Delhivery: track a shipment by waybill (mirrors /api/v1/packages/json/?waybill=). Send a waybill containing ERR-TIMEOUT / ERR-MALFORMED to force that failure mode.",
-      { waybill: z.string() },
-      async (args) => {
-        const scenario = resolveScenario(args.waybill);
-        await maybeDelay(scenario);
-        if (scenario !== "success") return textResult(errorPayload(scenario, "track_shipment"));
-        return textResult({
-          waybill: args.waybill,
-          status: "In Transit",
-          scans: [
-            { location: "Mumbai Hub", status: "Manifested", timestamp: new Date(Date.now() - 2 * 86400000).toISOString() },
-            { location: "Mumbai Hub", status: "In Transit", timestamp: new Date(Date.now() - 86400000).toISOString() },
-          ],
-        });
-      }
-    );
-
-    server.tool(
-      "request_pickup",
-      "Delhivery: schedule a pickup (mirrors /fm/request/new/). Used for home sample-collection / document pickup. Send pickup_location containing ERR-NOSLOT to simulate 'no slot available' (the logistics equivalent of 'no rider available'), ERR-TIMEOUT for a hung request.",
-      {
-        pickup_location: z.string(),
-        pickup_date: z.string(),
-        pickup_time: z.string(),
-        expected_package_count: z.number().default(1),
-      },
-      async (args) => {
-        const scenario = resolveScenario(args.pickup_location);
-        await maybeDelay(scenario);
-        if (scenario !== "success") return textResult(errorPayload(scenario, "request_pickup"));
-        return textResult({
-          pickup_id: `PKP${Math.floor(100000 + Math.random() * 899999)}`,
-          status: "Scheduled",
-          pickup_date: args.pickup_date,
-          pickup_time: args.pickup_time,
-        });
-      }
-    );
-
-    server.tool(
-      "cancel_shipment",
-      "Delhivery: cancel/edit a shipment (mirrors /api/p/edit). Send a waybill containing ERR-REJECTED to simulate a cancellation that the hub refuses because it's already out for delivery.",
-      { waybill: z.string(), reason: z.string() },
-      async (args) => {
-        const scenario = resolveScenario(args.waybill);
-        await maybeDelay(scenario);
-        if (scenario !== "success") return textResult(errorPayload(scenario, "cancel_shipment"));
-        return textResult({ waybill: args.waybill, status: "Cancelled" });
-      }
-    );
+    // track_shipment, request_pickup, and cancel_shipment were dropped here —
+    // Ken's negotiation flow never calls them (only create_shipment, to courier
+    // the renewed policy document), and reducing total registered tool count
+    // is a test for a suspected Pine Labs AgenticOrg platform bug where custom
+    // MCP connectors with more tools fail authorized_tools validation.
 
     // ---------------------------------------------------------------------
     // Custom capabilities (up to 3) — things Gnani / Pine Labs / Delhivery

@@ -43,7 +43,7 @@ YOUR TOOLS
   (mocked on our connector), for reading the current policy and negotiating terms.
 - create_shipment, track_shipment, request_pickup, cancel_shipment — Delhivery
   (mocked), for courier pickup/delivery of physical documents.
-- create_payment_link, get_order_status — Pine Labs, for collecting the approved premium.
+- create_order, check_order_status — Pine Labs, for collecting the approved premium.
 - send_email, read_inbox, search_emails, get_thread — Gmail, for the real negotiation
   correspondence with the insurer and for confirming outcomes with the user.
 

@@ -1,10 +1,19 @@
 # Ken — mock connector server (Round 3, The Ken x Pine Labs)
 
 MCP server exposing:
-- A **Delhivery-shaped mock** (4 tools, endpoint names/fields mirror Delhivery's published logistics API)
+- A **Delhivery-shaped mock** (1 tool, endpoint names/fields mirror Delhivery's published logistics API)
 - **3 custom capabilities** that Gnani, Pine Labs and Delhivery don't offer today (insurer-side systems)
 
 Single endpoint: `POST /api/mcp` (standard MCP Streamable HTTP transport, stateless).
+
+> **Note:** `track_shipment`, `request_pickup`, and `cancel_shipment` were trimmed
+> from the original 7-tool version. Ken's negotiation flow only ever calls
+> `create_shipment`, and reducing this connector's registered tool count from 7
+> to 4 was also a deliberate test for a Pine Labs AgenticOrg platform bug where
+> `authorized_tools` validation was rejecting every tool on this connector
+> regardless of which one was requested — see `docs/system-prompt-v2.md` and
+> project notes for the full debugging trail. The full 7-tool version mirroring
+> more of Delhivery's API is preserved in git history if ever needed again.
 
 ## Register on the Pine Labs platform
 
@@ -15,7 +24,7 @@ Connectors → Register Connector →
 - Category: `Custom` (or `Logistics` if offered)
 - Auth Type: `None` (no auth on this mock; add an API key check later if needed)
 
-The platform auto-discovers all 7 tools below from this one registration.
+The platform auto-discovers all 4 tools below from this one registration.
 
 ## Tools
 
@@ -24,9 +33,6 @@ The platform auto-discovers all 7 tools below from this one registration.
 | Tool | Mirrors | Used for |
 |---|---|---|
 | `create_shipment` | `POST /api/cmu/create.json` | Courier the renewed policy document to the user |
-| `track_shipment` | `GET /api/v1/packages/json/?waybill=` | Track that shipment |
-| `request_pickup` | `POST /fm/request/new/` | Schedule a pickup (e.g. home sample collection) |
-| `cancel_shipment` | `POST /api/p/edit` | Cancel/edit a shipment |
 
 ### Custom capabilities (up to 3, per brief)
 
