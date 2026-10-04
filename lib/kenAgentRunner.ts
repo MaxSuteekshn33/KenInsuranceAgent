@@ -135,7 +135,10 @@ export type KenAgentResult = {
   usage: Anthropic.Beta.Messages.BetaUsage;
 };
 
-export async function runKenAgent(messages: Anthropic.Beta.Messages.BetaMessageParam[]): Promise<KenAgentResult> {
+export async function runKenAgent(
+  messages: Anthropic.Beta.Messages.BetaMessageParam[],
+  options?: { fast?: boolean }
+): Promise<KenAgentResult> {
   const toolLog: ToolLogEntry[] = [];
 
   const tools = [
@@ -215,15 +218,23 @@ export async function runKenAgent(messages: Anthropic.Beta.Messages.BetaMessageP
     }),
   ];
 
-  const finalMessage = await client.beta.messages.toolRunner({
-    model: "claude-opus-4-8",
-    max_tokens: 4096,
-    thinking: { type: "adaptive" },
-    output_config: { effort: "medium" },
-    system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
-    tools,
-    messages,
-  });
+  const finalMessage = options?.fast
+    ? await client.beta.messages.toolRunner({
+        model: "claude-haiku-4-5",
+        max_tokens: 2048,
+        system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
+        tools,
+        messages,
+      })
+    : await client.beta.messages.toolRunner({
+        model: "claude-opus-4-8",
+        max_tokens: 4096,
+        thinking: { type: "adaptive" },
+        output_config: { effort: "medium" },
+        system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
+        tools,
+        messages,
+      });
 
   const replyText =
     finalMessage.content.find((block): block is Anthropic.Beta.Messages.BetaTextBlock => block.type === "text")

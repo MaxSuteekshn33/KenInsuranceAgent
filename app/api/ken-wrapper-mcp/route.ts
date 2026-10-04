@@ -67,7 +67,7 @@ const handler = createMcpHandler(
         ];
 
         try {
-          const result = await runKenAgent(messages);
+          const result = await runKenAgent(messages, { fast: true });
           return textResult({
             reply: result.reply,
             tool_calls: result.toolLog.map((t) => ({ name: t.name, input: t.input, result: t.result })),
